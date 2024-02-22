@@ -1,5 +1,6 @@
 ﻿using CoreEscuela.App;
 using CoreEscuela.Entidades;
+using CoreEscuela.Interfaces;
 using CoreEscuela.Util;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -9,8 +10,21 @@ internal class Program
     {
         var engine = new EscuelaEngine();
         engine.Inicializar();
-        ImprimirCursosEscuela(engine.escuela);
+        //ImprimirCursosEscuela(engine.escuela);
+        
+        var ListaObjetos = engine.GetObjetosEscuela(
+            out int conteoEvaluaciones,
+            out int conteoCursos,
+            out int conteoAsignaturas,
+            out int conteoAlumnos
+        );
 
+        /*
+        var listaILugar = from obj in ListaObjetos where obj is ILugar
+                          select (ILugar) obj;
+        */
+
+        //engine.escuela.LimpiarLugar();
     }
 
     private static void ImprimirCursosEscuela(Escuela escuela)

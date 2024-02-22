@@ -1,19 +1,13 @@
+using CoreEscuela.Interfaces;
+
 namespace CoreEscuela.Entidades
 {
-    public class Escuela
+    public class Escuela : ObjetoEscuelaBase, ILugar
     {
-        public string UniqueId { get; private set;} = Guid.NewGuid().ToString();
-
-        string nombre;
-
-        public string Nombre{
-            get{return nombre;}
-            set{nombre = value.ToUpper();}
-        }
-
         public int AñoDeCreacion {get;set;}
         public string Pais {get;set;}
         public string Ciudad {get;set;}
+        public string Dirección { get;set;}
         public TiposEscuela Tipo { get;set;}
         public List<Cursos> Cursos { get;set;}
 
@@ -29,6 +23,20 @@ namespace CoreEscuela.Entidades
         public override string ToString()
         {
             return $"Nombre: {Nombre}, Tipo: {Tipo}, Pais: {Pais}, Ciudad: {Ciudad}, Año de creación: {AñoDeCreacion}";
+        }
+
+        public void LimpiarLugar()
+        {
+            Console.WriteLine("Limpiando escuela...");
+  
+            foreach (var curso in Cursos)
+            {
+                Console.WriteLine("Limpiando curso...");
+                Console.WriteLine($"El curso {curso.Nombre} fué limpiado.");
+                Console.Beep(1000, 500);
+            }
+            Console.WriteLine($"La escuela {Nombre} fué limpiado.");
+       
         }
     }
 }

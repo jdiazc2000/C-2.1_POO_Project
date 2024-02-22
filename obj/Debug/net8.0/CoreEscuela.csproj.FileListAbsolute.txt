@@ -12,3 +12,4 @@ C:\platzi\Etapa1\obj\Debug\net8.0\refint\CoreEscuela.dll
 C:\platzi\Etapa1\obj\Debug\net8.0\CoreEscuela.pdb
 C:\platzi\Etapa1\obj\Debug\net8.0\CoreEscuela.genruntimeconfig.cache
 C:\platzi\Etapa1\obj\Debug\net8.0\ref\CoreEscuela.dll
+C:\platzi\Etapa1\obj\Debug\net8.0\CoreEscuela.sourcelink.json

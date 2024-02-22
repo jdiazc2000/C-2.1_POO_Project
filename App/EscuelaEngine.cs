@@ -1,8 +1,9 @@
 ﻿using CoreEscuela.Entidades;
+using CoreEscuela.Util;
 
 namespace CoreEscuela.App
 {
-    public class EscuelaEngine
+    public sealed class EscuelaEngine
     {
         public Escuela escuela {  get; set; }
 
@@ -17,42 +18,11 @@ namespace CoreEscuela.App
               ciudad: "Lima"
         );
 
-
-
-     
         CargarCursos();
         CargarAsignarutas();
         GenerarAlumnosAlAzar(10);
         CargarEvaluaciones();
-
-
-        }
-
-        private void CargarEvaluaciones()
-        {
-            foreach (var curso in escuela.Cursos)
-            {
-                foreach (var asignatura in curso.Asignaturas)
-                {
-                    foreach (var alumno in curso.Alumno)
-                    {
-                        var rnd = new Random(System.Environment.TickCount);
-
-                        for (var i = 0; i < 5; i++)
-                        {
-                            var evaluación = new Evaluaciones
-                            {
-                                Alumno = alumno,
-                                Asignatura = asignatura,
-                                Nombre = $"{asignatura.Nombre} Ev#{i + 1}",
-                                Nota = (float)(5 * rnd.NextDouble())
-                            };
-                            alumno.Evaluaciones.Add(evaluación);
-                        }
-                    }
-                }
-            }
-        }
+    }
 
         private List<Alumno> GenerarAlumnosAlAzar(int CantidadPorSalon)
         {
@@ -66,6 +36,59 @@ namespace CoreEscuela.App
                                select new Alumno {Nombre= $"{n1} {n2} {a1}"};
 
             return listaAlumnos.OrderBy( (alumndo) => alumndo.UniqueId).Take(CantidadPorSalon).ToList();
+        }
+
+
+        public List<ObjetoEscuelaBase> GetObjetosEscuela(
+            out int conteoEvaluaciones,
+            out int conteoAlumnos,
+            out int conteoAsignaturas,
+            out int conteoCursos,
+            bool traeEvaluaciones = true,
+            bool traeAlumnos = true, 
+            bool TraeAsignaturas = true, 
+            bool TraeCursos = true
+            )
+        {
+
+            conteoAlumnos = conteoAsignaturas = conteoEvaluaciones = conteoCursos = 0;
+
+            var listaObj = new List<ObjetoEscuelaBase>();
+            listaObj.Add(escuela);
+
+            if (TraeCursos)
+            {
+                listaObj.AddRange(escuela.Cursos);
+
+                conteoCursos = escuela.Cursos.Count;
+
+                foreach (var curso in escuela.Cursos)
+                    {
+                    conteoAsignaturas += curso.Asignaturas.Count;
+                    conteoAlumnos += curso.Alumno.Count;
+
+                    if (TraeAsignaturas)
+                        {
+                            listaObj.AddRange(curso.Asignaturas);
+                        }       
+
+                        if (traeAlumnos)
+                        {
+                            listaObj.AddRange(curso.Alumno);
+                        }
+
+                        if (traeEvaluaciones)
+                        {
+                            foreach (var alumno in curso.Alumno)
+                            {
+                                listaObj.AddRange(alumno.Evaluación);
+                                conteoEvaluaciones += alumno.Evaluación.Count;
+                            }
+                        }
+                    }
+            
+            }
+            return listaObj;
         }
 
         private void CargarAsignarutas()
@@ -100,6 +123,34 @@ namespace CoreEscuela.App
                 Random rnd = new Random();
                 curso.Alumno = GenerarAlumnosAlAzar(rnd.Next(5,20));
             }
-        } 
+        }
+
+        private void CargarEvaluaciones()
+        {
+            var lista = new List<Evaluación>();
+            foreach (var curso in escuela.Cursos)
+            {
+                foreach (var asignatura in curso.Asignaturas)
+                {
+                    foreach (var alumno in curso.Alumno)
+                    {
+                        var rnd = new Random(System.Environment.TickCount);
+
+                        for (var i = 0; i < 5; i++)
+                        {
+                            var evaluación = new Evaluación
+                            {
+                                Alumno = alumno,
+                                Asignatura = asignatura,
+                                Nombre = $"{asignatura.Nombre} Ev#{i + 1}",
+                                Nota = (float)(5 * rnd.NextDouble())
+                            };
+                            alumno.Evaluación.Add(evaluación);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
